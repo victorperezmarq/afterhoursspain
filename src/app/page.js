@@ -3,17 +3,9 @@
 import { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import FloatingSearch from "../components/FloatingSearch";
 
 export default function Home() {
-  const [selectedCategories, setSelectedCategories] = useState({
-    discotecas: true,
-    bares: true,
-    afterHours: true,
-    eventos: true,
-    actividades: true,
-    cafeterias: true,
-  });
+  const [category, setCategory] = useState("discotecas");
 
   useEffect(() => {
     const map = L.map("map").setView([40.4168, -3.7038], 13); // Coordenadas de Madrid
@@ -44,43 +36,34 @@ export default function Home() {
       .then((res) => res.json())
       .then((places) => {
         places.forEach((place) => {
-          if (selectedCategories[place.type]) {
-            const icon = place.type === "discoteca" ? clubIcon : activityIcon;
+          const icon = place.type === "discoteca" ? clubIcon : activityIcon;
 
-            // Crear contenido del popup con HTML personalizado
-            const popupContent = `
-              <div class="card card-compact bg-base-100 w-96 shadow-xl">
-                <figure>
-                  <img src="${place.image}" alt="${place.name}" />
-                </figure>
-                <div class="card-body">
-                  <h2 class="card-title">${place.name}</h2>
-                  <p>${place.description}</p>
-                  <div class="card-actions justify-end">
-                    <button class="btn btn-primary">Get Directions</button>
-                  </div>
+          // Crear contenido del popup con HTML personalizado
+          const popupContent = `
+            <div class="card card-compact bg-base-100 w-96 shadow-xl">
+              <figure>
+                <img src="${place.image}" alt="${place.name}" />
+              </figure>
+              <div class="card-body">
+                <h2 class="card-title">${place.name}</h2>
+                <p>${place.description}</p>
+                <div class="card-actions justify-end">
+                  <button class="btn btn-primary">Get Directions</button>
                 </div>
               </div>
-            `;
+            </div>
+          `;
 
-            L.marker([place.lat, place.lng], { icon })
-              .addTo(map)
-              .bindPopup(popupContent);
-          }
+          L.marker([place.lat, place.lng], { icon })
+            .addTo(map)
+            .bindPopup(popupContent);
         });
       });
 
     return () => {
       map.remove();
     };
-  }, [selectedCategories]);
-
-  const toggleCategory = (category) => {
-    setSelectedCategories((prev) => ({
-      ...prev,
-      [category]: !prev[category],
-    }));
-  };
+  }, [category]);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -89,10 +72,30 @@ export default function Home() {
         <h2 className="text-2xl text-center">Descubre los mejores eventos nocturnos en Madrid</h2>
         <div id="map" className="w-full h-full flex-grow"></div>
 
-        <FloatingSearch
-          selectedCategories={selectedCategories}
-          toggleCategory={toggleCategory}
-        />
+        {/* Buscador flotante */}
+        <div className="absolute top-4 left-4">
+          <div className="dropdown dropdown-bottom">
+            <div tabIndex="0" role="button" className="btn m-1">
+              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path>
+              </svg>
+            </div>
+            <ul tabIndex="0" className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+              <li>
+                <a onClick={() => setCategory("discotecas")}>Discotecas</a>
+              </li>
+              <li>
+                <a onClick={() => setCategory("garitos")}>Garitos de moda</a>
+              </li>
+              <li>
+                <a onClick={() => setCategory("restaurantes")}>Restaurantes de moda</a>
+              </li>
+              <li>
+                <a onClick={() => setCategory("actividades")}>Actividades fuera de lo normal</a>
+              </li>
+            </ul>
+          </div>
+        </div>
       </main>
       <footer className="flex gap-6 flex-wrap items-center justify-center p-4">
         <a
