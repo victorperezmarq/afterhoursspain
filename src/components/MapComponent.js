@@ -1,10 +1,8 @@
-"use client";
-
 import { useState, useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-export default function Home() {
+export default function MapComponent() {
   const [category, setCategory] = useState("discotecas");
 
   useEffect(() => {
@@ -66,63 +64,23 @@ export default function Home() {
   }, [category]);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <main className="flex flex-col flex-grow items-center justify-center">
-        <h1 className="text-5xl font-extrabold text-center">Afterhours Spain</h1>
-        <h2 className="text-2xl text-center">Descubre los mejores eventos nocturnos en Madrid</h2>
-        <div id="map" className="w-full h-full flex-grow"></div>
+    <div className="relative">
+      <div id="map" className="w-full h-full flex-grow"></div>
 
-        {/* Buscador flotante */}
-        <div className="absolute top-4 left-4">
-          <div className="dropdown dropdown-bottom">
-            <div tabIndex="0" role="button" className="btn m-1">
-              <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35m1.35-5.65a7 7 0 1 1-14 0 7 7 0 0 1 14 0z"></path>
-              </svg>
-            </div>
-            <ul tabIndex="0" className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-              <li>
-                <a onClick={() => setCategory("discotecas")}>Discotecas</a>
-              </li>
-              <li>
-                <a onClick={() => setCategory("garitos")}>Garitos de moda</a>
-              </li>
-              <li>
-                <a onClick={() => setCategory("restaurantes")}>Restaurantes de moda</a>
-              </li>
-              <li>
-                <a onClick={() => setCategory("actividades")}>Actividades fuera de lo normal</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </main>
-      <footer className="flex gap-6 flex-wrap items-center justify-center p-4">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Buscador flotante */}
+      <div className="absolute top-4 left-4 bg-white p-4 rounded-lg shadow-lg w-64">
+        <h3 className="text-lg font-semibold mb-2">Buscar lugares</h3>
+        <select
+          className="w-full p-2 border border-gray-300 rounded"
+          value={category}
+          onChange={(e) => setCategory(e.target.value)}
         >
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Go to nextjs.org →
-        </a>
-      </footer>
+          <option value="discotecas">Discotecas</option>
+          <option value="garitos">Garitos de moda</option>
+          <option value="restaurantes">Restaurantes de moda</option>
+          <option value="actividades">Actividades fuera de lo normal</option>
+        </select>
+      </div>
     </div>
   );
 }
