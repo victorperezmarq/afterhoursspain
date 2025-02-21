@@ -40,26 +40,43 @@ export default function Home() {
 
           // Crear contenido del popup con HTML personalizado
           const popupContent = `
-            <div class="card card-compact bg-base-100 w-96 shadow-xl">
-              <figure>
-                <img src="${place.image}" alt="${place.name}" />
-              </figure>
+            <div class="card w-72 bg-white shadow-xl p-4">
               <div class="card-body">
-                <h2 class="card-title">${place.name}</h2>
-                <p>${place.description}</p>
-                <div class="card-actions justify-end">
-                  <button class="btn btn-primary">Get Directions</button>
+                <h2 class="card-title text-gray-900 text-lg">${place.name}</h2>
+                <p class="text-gray-700 text-sm">${place.description}</p>
+                <img src="${place.image}" alt="${place.name}" class="w-full h-auto mt-2 rounded-lg" />
+                <div class="mt-2">
+                  <h3 class="text-md font-semibold">Información</h3>
+                  <ul>
+                    ${Object.entries(place.info).map(([key, value]) => `<li class="text-gray-600 text-sm"><strong>${key}:</strong> ${value}</li>`).join('')}
+                  </ul>
+                </div>
+                <div class="card-actions mt-2">
+                  <button class="btn bg-blue-600 text-white font-semibold rounded-lg px-2 py-1 hover:bg-blue-700 text-sm">
+                    Get Directions
+                  </button>
                 </div>
               </div>
             </div>
           `;
 
-          L.marker([place.lat, place.lng], { icon })
-            .addTo(map)
-            .bindPopup(popupContent);
+          const marker = L.marker([place.lat, place.lng], { icon }).addTo(map);
+
+          // Asociar solo el popup personalizado y evitar popups adicionales
+          marker.bindPopup(popupContent, { maxWidth: 300 });
+
+          // Desactivar eventos de clic predeterminados para evitar popups dobles
+          marker.off("click");
+          marker.on("click", () => {
+            marker.openPopup(); // Solo abre el popup personalizado
+          });
         });
+      })
+      .catch((error) => {
+        console.error("Error al cargar ubicaciones:", error);
       });
 
+    // Limpiar el mapa al desmontar el componente
     return () => {
       map.remove();
     };
@@ -97,31 +114,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <footer className="flex gap-6 flex-wrap items-center justify-center p-4">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Go to nextjs.org →
-        </a>
+      <footer>
       </footer>
     </div>
   );
