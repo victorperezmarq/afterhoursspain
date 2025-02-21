@@ -2,19 +2,13 @@
   {
     "name": "Teatro Kapital",
     "type": "discoteca",
-    "lat": 40.410122,
-    "lng": -3.693535,
-    "description": "Una de las discotecas más famosas de Madrid con varias plantas y distintos ambientes.",
+    "lat": 40.4108,
+    "lng": -3.6947,
+    "description": "Famosa discoteca de Madrid con 7 plantas y variedad musical.",
     "image": "/images/kapital.jpg",
-    "tags": ["Peak: Saturday 🔥", "Night Club 💃", "Electronic Dance 🎵"],
     "info": {
-      "peak": "1AM",
-      "entry": "££",
-      "drinks": "£10-15",
-      "payment": "Card Only",
-      "security": "50/50 | Security Check ✓",
-      "coat_room": "✓",
-      "queue": "Long Queue Likely"
+      "Entrada": "20€ - 30€",
+      "Precio por consumición": "12€ - 14€"
     }
   }
 ]
